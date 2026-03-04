@@ -1,0 +1,73 @@
+<div class="container-page">
+    <section class="glass panel">
+        <div class="top">
+            <div>
+                <div class="title">Cart</div>
+                <div class="sub">Review items and proceed to checkout.</div>
+            </div>
+
+            <a class="btn-primary" routerLink="/checkout"
+                *ngIf="items().length">Checkout</a>
+        </div>
+
+        <div class="empty glass-soft" *ngIf="items().length === 0">
+            Cart is empty. <a routerLink="/products">Browse products</a>
+        </div>
+
+        <div class="list" *ngIf="items().length">
+            <div class="item" *ngFor="let it of items()">
+                <img class="img" [src]="it.product.images[0]"
+                    [alt]="it.product.name" />
+
+                <div class="info">
+                    <div class="name">{{ it.product.name }}</div>
+                    <div class="muted">{{ it.product.brand }} • {{
+                        it.product.category }}</div>
+                    <div class="price">
+                        ${{ it.product.price | number : '1.2-2' }}
+                    </div>
+                </div>
+
+                <!-- lightweight stepper for now (we’ll replace with shared QuantityStepper next) -->
+                <app-quantity-stepper
+                    [value]="it.qty"
+                    [min]="0"
+                    [max]="it.product.stock"
+                    (valueChange)="($event === 0 ? cart.remove(it.product.id) : cart.setQty(it.product.id, $event))">
+                </app-quantity-stepper>
+
+                <div class="lineTotal">
+                    ${{ (it.product.price * it.qty) | number : '1.2-2' }}
+                </div>
+
+                <button class="remove" type="button"
+                    (click)="cart.remove(it.product.id)">✕</button>
+            </div>
+        </div>
+
+        <div class="summary glass-soft" *ngIf="items().length">
+            <div class="srow">
+                <span>Subtotal</span>
+                <strong>${{ subtotal() | number : '1.2-2' }}</strong>
+            </div>
+            <div class="srow">
+                <span>Shipping</span>
+                <strong>${{ shipping() | number : '1.2-2' }}</strong>
+            </div>
+            <div class="srow">
+                <span>Tax</span>
+                <strong>${{ tax() | number : '1.2-2' }}</strong>
+            </div>
+            <div class="srow total">
+                <span>Total</span>
+                <strong>${{ total() | number : '1.2-2' }}</strong>
+            </div>
+
+            <div class="actions">
+                <a class="btn-ghost" routerLink="/products">Continue
+                    shopping</a>
+                <a class="btn-primary" routerLink="/checkout">Checkout</a>
+            </div>
+        </div>
+    </section>
+</div>

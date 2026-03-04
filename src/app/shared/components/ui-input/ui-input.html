@@ -1,0 +1,16 @@
+<div class="ui">
+    <label class="ui__label" *ngIf="label">{{ label }}</label>
+
+    <ng-container *ngIf="fc as c">
+        <input
+            class="ui__input"
+            [class.is-error]="showError"
+            [type]="type"
+            [placeholder]="placeholder"
+            [attr.autocomplete]="autocomplete"
+            [formControl]="c" />
+    </ng-container>
+
+    <div class="ui__hint" *ngIf="hint && !showError">{{ hint }}</div>
+    <div class="ui__error" *ngIf="showError">{{ firstError }}</div>
+</div>

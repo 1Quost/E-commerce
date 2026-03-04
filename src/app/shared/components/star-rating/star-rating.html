@@ -1,0 +1,7 @@
+<div class="sr">
+    <span class="sr__stars" [style.--rating]="safeRating()"></span>
+
+    @if (reviewsCount != null) {
+    <span class="sr__count">({{ reviewsCount }})</span>
+    }
+</div>

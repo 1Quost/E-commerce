@@ -1,0 +1,45 @@
+.panel {
+    padding: 18px;
+    border-radius: 28px;
+    text-align: center;
+}
+
+.icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 22px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 10px;
+    font-weight: 950;
+    font-size: 28px;
+    color: rgb(5, 150, 105);
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.title {
+    font-weight: 950;
+    letter-spacing: -0.5px;
+    font-size: 32px;
+}
+
+.sub {
+    margin: 8px auto 0;
+    max-width: 54ch;
+    font-weight: 750;
+    color: rgba(11, 18, 32, 0.66);
+    line-height: 1.65;
+}
+
+.dark .sub {
+    color: rgba(255, 255, 255, 0.70);
+}
+
+.actions {
+    margin-top: 14px;
+    display: inline-flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}

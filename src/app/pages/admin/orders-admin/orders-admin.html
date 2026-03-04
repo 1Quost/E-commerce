@@ -1,0 +1,39 @@
+<section class="glass-soft panel">
+    <div class="panel__title">Orders</div>
+    <div class="panel__sub">Mocked for now (checkout will later generate real
+        ones).</div>
+
+    <div class="table">
+        <div class="row head">
+            <div>ID</div>
+            <div>Customer</div>
+            <div>Status</div>
+            <div>Total</div>
+            <div>Actions</div>
+        </div>
+
+        <div class="row" *ngFor="let o of orders()">
+            <div class="mono">{{ o.id }}</div>
+            <div>
+                <div class="strong">{{ o.customer }}</div>
+                <div class="muted">{{ o.email }}</div>
+            </div>
+
+            <div>
+                <span class="pill" [attr.data-status]="o.status">{{ o.status
+                    }}</span>
+            </div>
+
+            <div class="strong">${{ o.total | number : '1.2-2' }}</div>
+
+            <div class="actions">
+                <button class="btn-ghost"
+                    (click)="setStatus(o.id,'Pending')">Pending</button>
+                <button class="btn-ghost"
+                    (click)="setStatus(o.id,'Paid')">Paid</button>
+                <button class="btn-danger"
+                    (click)="setStatus(o.id,'Cancelled')">Cancel</button>
+            </div>
+        </div>
+    </div>
+</section>

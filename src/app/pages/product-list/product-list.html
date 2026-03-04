@@ -1,0 +1,31 @@
+<div class="container-page">
+    <div class="top glass">
+        <div>
+            <div class="title">Products</div>
+            <div class="sub" *ngIf="q().trim().length">Results for “{{ q()
+                }}”</div>
+            <div class="sub" *ngIf="!q().trim().length">Browse by category or
+                search in the header.</div>
+        </div>
+
+        <div class="filters">
+            <button
+                class="chip"
+                *ngFor="let c of categories"
+                type="button"
+                [class.is-active]="category() === c"
+                (click)="category.set(c)">
+                {{ c }}
+            </button>
+        </div>
+    </div>
+
+    <div class="grid">
+        <app-product-card *ngFor="let p of filtered()"
+            [product]="p"></app-product-card>
+    </div>
+
+    <div class="empty glass-soft" *ngIf="filtered().length === 0">
+        No products found. Try another keyword.
+    </div>
+</div>

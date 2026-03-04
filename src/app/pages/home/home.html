@@ -1,0 +1,43 @@
+<div class="container-page">
+    <section class="hero glass">
+        <div class="hero__text">
+            <div class="hero__kicker">Premium E-Commerce</div>
+            <h1 class="hero__title">Nexora Storefront</h1>
+            <p class="hero__sub">
+                Glass UI • Signals • Guards • Admin CRUD • Reactive Forms •
+                Testing.
+            </p>
+
+            <div class="hero__cta">
+                <a class="btn-primary" routerLink="/products">Browse
+                    products</a>
+                <a class="btn-ghost" routerLink="/login">Login</a>
+            </div>
+        </div>
+
+        <div class="hero__art">
+            <div class="orb orb--1"></div>
+            <div class="orb orb--2"></div>
+            <div class="orb orb--3"></div>
+
+            <div class="hero__card glass-soft">
+                <div class="hero__cardTitle">Featured picks</div>
+                <div class="hero__cardSub">Handpicked premium items</div>
+                <a class="btn-primary hero__cardBtn" routerLink="/products">Shop
+                    now</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section__top">
+            <h2 class="section__title">Featured</h2>
+            <a class="btn-ghost" routerLink="/products">View all</a>
+        </div>
+
+        <div class="grid">
+            <app-product-card *ngFor="let p of featured()"
+                [product]="p"></app-product-card>
+        </div>
+    </section>
+</div>

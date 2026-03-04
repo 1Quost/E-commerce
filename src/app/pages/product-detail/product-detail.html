@@ -1,0 +1,51 @@
+<div class="container-page" *ngIf="product() as p; else notfound">
+    <a class="back" routerLink="/products">← Back</a>
+
+    <section class="wrap glass">
+        <div class="media">
+            <img class="img" [src]="p.images[0]" [alt]="p.name" />
+            <div class="badge" *ngIf="p.badge">{{ p.badge }}</div>
+        </div>
+
+        <div class="info">
+            <div class="brand">{{ p.brand }}</div>
+            <h1 class="name">{{ p.name }}</h1>
+
+            <p class="desc">{{ p.description }}</p>
+
+            <div class="row">
+                <div class="price">
+                    <span class="now">${{ p.price | number : '1.2-2' }}</span>
+                    <span class="old"
+                        *ngIf="p.oldPrice != null && p.oldPrice > p.price">
+                        ${{ p.oldPrice | number : '1.2-2' }}
+                    </span>
+                </div>
+
+                <div class="stock" [attr.data-stock]="p.status || 'In Stock'">
+                    {{ p.status || 'In Stock' }} • {{ p.stock }} left
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-primary" type="button" (click)="addOne()">Add
+                    to cart</button>
+                <a class="btn-ghost" routerLink="/cart">Go to cart</a>
+            </div>
+
+            <div class="mini glass-soft">
+                <div class="mini__title">In your cart</div>
+                <div class="mini__value">{{ qtyInCart() }}</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<ng-template #notfound>
+    <div class="container-page">
+        <div class="glass-soft nf">
+            Product not found.
+            <a routerLink="/products">Browse products</a>
+        </div>
+    </div>
+</ng-template>

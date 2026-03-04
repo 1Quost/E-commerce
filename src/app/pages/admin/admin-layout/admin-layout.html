@@ -1,0 +1,28 @@
+<div class="container-page">
+    <section class="admin-shell glass">
+        <div class="admin-top">
+            <div>
+                <div class="admin-title">Admin</div>
+                <div class="admin-sub">Manage products and orders — live
+                    updates, no reload.</div>
+            </div>
+
+            <div class="admin-actions">
+                <a class="btn-ghost" routerLink="/">Back to Store</a>
+            </div>
+        </div>
+
+        <nav class="admin-tabs">
+            <a routerLink="/admin/dashboard"
+                routerLinkActive="is-active">Dashboard</a>
+            <a routerLink="/admin/products"
+                routerLinkActive="is-active">Products</a>
+            <a routerLink="/admin/orders"
+                routerLinkActive="is-active">Orders</a>
+        </nav>
+
+        <div class="admin-body">
+            <router-outlet></router-outlet>
+        </div>
+    </section>
+</div>

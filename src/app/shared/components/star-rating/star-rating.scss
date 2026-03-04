@@ -1,0 +1,42 @@
+:host {
+    display: inline-flex;
+}
+
+.sr {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sr__stars {
+    --rating: 0;
+    position: relative;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 1.5px;
+}
+
+.sr__stars::before {
+    content: "★★★★★";
+    color: rgba(11, 18, 32, 0.20);
+}
+
+.sr__stars::after {
+    content: "★★★★★";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc((var(--rating) / 5) * 100%);
+    overflow: hidden;
+    background: linear-gradient(90deg, #f59e0b, #fb7185);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.sr__count {
+    font-size: 12px;
+    font-weight: 900;
+    color: rgba(11, 18, 32, 0.62);
+}

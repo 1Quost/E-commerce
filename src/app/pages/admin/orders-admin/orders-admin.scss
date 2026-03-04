@@ -1,0 +1,114 @@
+.panel {
+    padding: 14px;
+    border-radius: 20px;
+}
+
+.panel__title {
+    font-weight: 950;
+    font-size: 18px;
+    letter-spacing: -0.2px;
+}
+
+.panel__sub {
+    margin-top: 4px;
+    font-weight: 800;
+    color: rgba(11, 18, 32, 0.62);
+    font-size: 13px;
+}
+
+.dark .panel__sub {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.table {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.4fr 1fr 1fr 1.4fr;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    background: rgba(255, 255, 255, 0.70);
+    align-items: center;
+}
+
+.dark .row {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+.row.head {
+    background: rgba(15, 23, 42, 0.03);
+    font-weight: 950;
+}
+
+.dark .row.head {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 900px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+
+    .row.head {
+        display: none;
+    }
+}
+
+.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-weight: 900;
+}
+
+.strong {
+    font-weight: 950;
+}
+
+.muted {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 800;
+    color: rgba(11, 18, 32, 0.62);
+}
+
+.dark .muted {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.actions {
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 950;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.pill[data-status="Paid"] {
+    border-color: rgba(16, 185, 129, 0.22);
+    background: rgba(16, 185, 129, 0.12);
+    color: rgb(5, 150, 105);
+}
+
+.pill[data-status="Pending"] {
+    border-color: rgba(245, 158, 11, 0.28);
+    background: rgba(245, 158, 11, 0.14);
+    color: rgb(146, 64, 14);
+}
+
+.pill[data-status="Cancelled"] {
+    border-color: rgba(239, 68, 68, 0.26);
+    background: rgba(239, 68, 68, 0.12);
+    color: rgb(185, 28, 28);
+}

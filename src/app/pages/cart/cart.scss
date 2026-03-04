@@ -1,0 +1,143 @@
+.panel {
+    padding: 16px;
+    border-radius: 28px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.title {
+    font-weight: 950;
+    font-size: 22px;
+    letter-spacing: -0.4px;
+}
+
+.sub {
+    margin-top: 4px;
+    font-weight: 800;
+    color: rgba(11, 18, 32, 0.62);
+    font-size: 13px;
+}
+
+.dark .sub {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.empty {
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 22px;
+    font-weight: 900;
+}
+
+.list {
+    margin-top: 14px;
+    display: grid;
+    gap: 10px;
+}
+
+.item {
+    display: grid;
+    grid-template-columns: 84px 1fr auto auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 22px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.dark .item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+@media (max-width: 900px) {
+    .item {
+        grid-template-columns: 84px 1fr;
+    }
+
+    .lineTotal,
+    .remove {
+        justify-self: end;
+    }
+}
+
+.img {
+    width: 84px;
+    height: 84px;
+    border-radius: 22px;
+    object-fit: cover;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.name {
+    font-weight: 950;
+}
+
+.muted {
+    margin-top: 2px;
+    font-weight: 800;
+    color: rgba(11, 18, 32, 0.62);
+    font-size: 12px;
+}
+
+.dark .muted {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.price {
+    margin-top: 6px;
+    font-weight: 950;
+}
+
+.lineTotal {
+    font-weight: 950;
+}
+
+.remove {
+    width: 40px;
+    height: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(15, 23, 42, 0.04);
+    font-weight: 950;
+}
+
+.summary {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 22px;
+}
+
+.srow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 850;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.dark .srow {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.srow.total {
+    border-bottom: none;
+    font-weight: 950;
+    font-size: 16px;
+}
+
+.actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}

@@ -1,0 +1,39 @@
+<div class="sb" [class.open]="open">
+    <div class="sb__panel glass">
+        <div class="sb__top">
+            <div class="sb__title">Navigation</div>
+            <button class="sb__close" type="button" (click)="close.emit()"
+                aria-label="Close">
+                ✕
+            </button>
+        </div>
+
+        <a class="sb__link" routerLink="/" routerLinkActive="active"
+            (click)="close.emit()">Home</a>
+        <a class="sb__link" routerLink="/products" routerLinkActive="active"
+            (click)="close.emit()">Products</a>
+        <a class="sb__link" routerLink="/cart" routerLinkActive="active"
+            (click)="close.emit()">Cart</a>
+
+        <div class="sb__sep"></div>
+
+        <ng-container *ngIf="!auth.isAuthenticated(); else loggedIn">
+            <a class="sb__link" routerLink="/login" routerLinkActive="active"
+                (click)="close.emit()">Login</a>
+            <a class="sb__link" routerLink="/register" routerLinkActive="active"
+                (click)="close.emit()">Register</a>
+        </ng-container>
+
+        <ng-template #loggedIn>
+            <a class="sb__link" routerLink="/profile" routerLinkActive="active"
+                (click)="close.emit()">Profile</a>
+            <a class="sb__link" routerLink="/orders" routerLinkActive="active"
+                (click)="close.emit()">Orders</a>
+            <a class="sb__link" *ngIf="isAdmin()" routerLink="/admin/dashboard"
+                routerLinkActive="active" (click)="close.emit()">Admin</a>
+
+            <button class="sb__danger" type="button"
+                (click)="auth.logout(); go('/login')">Logout</button>
+        </ng-template>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+@if (product(); as p) {
+<a class="card" [routerLink]="['/products', p.id]">
+    <div class="card__media">
+        <img class="card__img" [src]="p.images[0]" [alt]="p.name" />
+        <div class="card__shine"></div>
+
+        @if (p.badge) {
+        <div class="card__badge" [attr.data-badge]="p.badge">{{ p.badge }}</div>
+        }
+    </div>
+
+    <div class="card__body">
+        <div class="card__meta">
+            <div class="card__brand">{{ p.brand }}</div>
+
+            <div class="flex items-center gap-2 text-xs font-extrabold"
+                style="color: rgba(11,18,32,.62);">
+                <span class="nx-stars" [style.--rating]="p.rating ?? 0"></span>
+                <span>({{ p.reviewsCount ?? 0 }})</span>
+            </div>
+        </div>
+
+        <div class="card__title line-clamp-1">{{ p.name }}</div>
+        <div class="card__desc line-clamp-2">{{ p.shortDescription }}</div>
+
+        <div class="card__footer">
+            <div>
+                <span class="nx-price__now">${{ p.price | number:'1.2-2'
+                    }}</span>
+
+                @if (p.oldPrice != null && p.oldPrice > p.price) {
+                <span class="nx-price__old">${{ p.oldPrice | number:'1.2-2'
+                    }}</span>
+                }
+            </div>
+
+            @if (auth.isAuthenticated()) {
+            @let item = cart.items().find(i => i.product.id === p.id);
+            @let qty = item?.qty ?? 0;
+
+            <div class="nx-qty"
+                (click)="$event.preventDefault(); $event.stopPropagation()">
+                @if (qty === 0) {
+                <button
+                    type="button"
+                    class="nx-qty__btn nx-qty__btn--add"
+                    aria-label="Add to cart"
+                    (click)="quickAdd($event)">+</button>
+                } @else {
+                <button
+                    type="button"
+                    class="nx-qty__btn"
+                    aria-label="Decrease quantity"
+                    (click)="$event.preventDefault(); $event.stopPropagation(); qty === 1 ? cart.remove(p.id) : cart.setQty(p.id, qty - 1)">−</button>
+
+                <span class="nx-qty__count">{{ qty }}</span>
+
+                <button
+                    type="button"
+                    class="nx-qty__btn"
+                    aria-label="Increase quantity"
+                    (click)="$event.preventDefault(); $event.stopPropagation(); cart.setQty(p.id, qty + 1)">+</button>
+                }
+            </div>
+            }
+        </div>
+    </div>
+</a>
+}

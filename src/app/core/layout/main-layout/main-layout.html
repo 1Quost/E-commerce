@@ -1,0 +1,13 @@
+<div class="nx-shell">
+    <app-header></app-header>
+
+    <main class="nx-main">
+        <router-outlet></router-outlet>
+    </main>
+
+    <app-footer></app-footer>
+
+    <!-- Optional global sidebar hook (not used by header right now) -->
+    <app-sidebar [open]="sidebarOpen()"
+        (close)="sidebarOpen.set(false)"></app-sidebar>
+</div>

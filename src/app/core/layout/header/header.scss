@@ -1,0 +1,190 @@
+.nx-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.10);
+    transition: background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.dark .nx-header {
+    background: rgba(16, 16, 34, 0.55);
+    border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+.nx-header.is-scrolled {
+    background: rgba(255, 255, 255, 0.62);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.dark .nx-header.is-scrolled {
+    background: rgba(16, 16, 34, 0.48);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.30);
+}
+
+.nx-header__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 0;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hamb {
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.60);
+    font-weight: 900;
+}
+
+.dark .hamb {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(16, 16, 34, 0.60);
+    color: rgba(255, 255, 255, 0.90);
+}
+
+@media (min-width: 900px) {
+    .hamb {
+        display: none;
+    }
+}
+
+.search {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 520px;
+}
+
+.search__input {
+    width: 100%;
+    height: 44px;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.86);
+    padding: 0 14px;
+    font-weight: 800;
+    outline: none;
+}
+
+.dark .search__input {
+    background: rgba(16, 16, 34, 0.62);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.search__btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(15, 23, 42, 0.04);
+    font-weight: 950;
+}
+
+.dark .search__btn {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.92);
+}
+
+@media (min-width: 900px) {
+    .search {
+        display: inline-flex;
+    }
+}
+
+.cartIcon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cartBadge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    display: inline-grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 950;
+    color: white;
+    background: linear-gradient(135deg, var(--nx-brand-1), var(--nx-brand-3));
+    box-shadow: 0 10px 20px rgba(236, 72, 153, 0.22);
+}
+
+.mobileOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    z-index: 60;
+}
+
+.mobileMenu {
+    position: absolute;
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    border-radius: 22px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.12);
+    padding: 10px;
+    display: grid;
+    gap: 6px;
+}
+
+.dark .mobileMenu {
+    background: rgba(16, 16, 34, 0.90);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.mobileMenu a,
+.mobileMenu button {
+    text-align: left;
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    background: rgba(15, 23, 42, 0.04);
+    font-weight: 900;
+}
+
+.dark .mobileMenu a,
+.dark .mobileMenu button {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.pill {
+    margin-left: 8px;
+    display: inline-grid;
+    place-items: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 999px;
+    font-weight: 950;
+    color: white;
+    background: linear-gradient(135deg, var(--nx-brand-1), var(--nx-brand-3));
+}

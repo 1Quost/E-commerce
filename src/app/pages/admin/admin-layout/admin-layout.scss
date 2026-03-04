@@ -1,0 +1,67 @@
+.admin-shell {
+    padding: 18px;
+}
+
+.admin-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.admin-title {
+    font-weight: 950;
+    letter-spacing: -0.3px;
+    font-size: 22px;
+}
+
+.admin-sub {
+    margin-top: 4px;
+    color: rgba(11, 18, 32, 0.62);
+    font-weight: 750;
+    font-size: 14px;
+}
+
+.dark .admin-sub {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.admin-tabs {
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+
+    a {
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        background: rgba(255, 255, 255, 0.55);
+        font-weight: 900;
+        color: rgba(11, 18, 32, 0.78);
+        transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+    }
+
+    a:hover {
+        transform: translateY(-1px);
+        background: rgba(79, 70, 229, 0.06);
+        border-color: rgba(79, 70, 229, 0.18);
+    }
+
+    a.is-active {
+        background: rgba(79, 70, 229, 0.10);
+        border-color: rgba(79, 70, 229, 0.25);
+        color: rgba(11, 18, 32, 0.92);
+    }
+}
+
+.dark .admin-tabs a {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.10);
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.admin-body {
+    padding-top: 4px;
+}

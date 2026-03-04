@@ -1,0 +1,49 @@
+:host {
+    display: inline-flex;
+}
+
+/* Matches your global style.scss “nx-stepper” look */
+.nx-stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.nx-stepper__btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(15, 23, 42, 0.04);
+    font-weight: 950;
+    cursor: pointer;
+    transition: background 0.16s ease, transform 0.16s ease, border-color 0.16s ease;
+
+    &:hover:not(:disabled) {
+        background: rgba(79, 70, 229, 0.08);
+        border-color: rgba(79, 70, 229, 0.2);
+        transform: translateY(-1px);
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+.nx-stepper__count {
+    min-width: 28px;
+    text-align: center;
+    font-weight: 950;
+    color: rgba(11, 18, 32, 0.92);
+}
+
+.is-disabled {
+    opacity: 0.75;
+}

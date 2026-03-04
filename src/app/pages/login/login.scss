@@ -1,0 +1,60 @@
+.panel {
+    padding: 18px;
+    border-radius: 28px;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.title {
+    font-weight: 950;
+    font-size: 24px;
+    letter-spacing: -0.4px;
+}
+
+.sub {
+    margin-top: 4px;
+    font-weight: 800;
+    color: rgba(11, 18, 32, 0.62);
+    font-size: 13px;
+}
+
+.dark .sub {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.form {
+    margin-top: 14px;
+    display: grid;
+    gap: 12px;
+}
+
+.err {
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 900;
+    color: rgba(239, 68, 68, 0.92);
+}
+
+.bottom {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+
+.muted {
+    color: rgba(11, 18, 32, 0.60);
+}
+
+.dark .muted {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.hint {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 22px;
+    font-weight: 850;
+}

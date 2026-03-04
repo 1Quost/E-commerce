@@ -1,0 +1,155 @@
+@import 'styles/reset';
+@import 'styles/variables';
+@import 'styles/mixins';
+
+/*------------------------------------------------------------------
+[Master Stylesheet]
+
+Project:    Nexora E-commerce
+Version:    1.0.0
+-------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------
+[Table of contents]
+
+1. Global Styles
+2. Reusable Classes (.glass, .btn-*, .card, .input)
+3. Typography
+4. Animations
+
+-------------------------------------------------------------------*/
+
+/*-------------------------------------------*/
+/* 1. Global Styles
+/*-------------------------------------------*/
+
+body {
+    font-family: $font-family-display;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.light {
+    background-color: $background-light;
+    color: $text-light;
+}
+
+.dark {
+    background-color: $background-dark;
+    color: $text-dark;
+}
+
+/*-------------------------------------------*/
+/* 2. Reusable Classes
+/*-------------------------------------------*/
+
+.glass {
+    @include glass-effect(rgba(255, 255, 255, 0.4));
+
+    .dark & {
+        @include glass-dark-effect(rgba(16, 16, 34, 0.6));
+    }
+}
+
+.btn-primary {
+    @include button-styles($primary, white);
+    @include primary-gradient;
+}
+
+.btn-ghost {
+    @include button-styles(transparent, $primary);
+    border: 2px solid $primary;
+
+    &:hover {
+        background-color: rgba($primary, 0.1);
+    }
+}
+
+.btn-danger {
+    @include button-styles($danger, white);
+}
+
+.input {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: $border-radius;
+    padding: 0.75rem 1rem;
+    transition: $transition-base;
+
+    .dark & {
+        background-color: rgba(16, 16, 34, 0.5);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba($primary, 0.5);
+    }
+}
+
+.card {
+    background-color: white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-md;
+    padding: 1.5rem;
+    transition: $transition-base;
+
+    .dark & {
+        background-color: lighten($background-dark, 5%);
+    }
+}
+
+/*-------------------------------------------*/
+/* 3. Typography
+/*-------------------------------------------*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+h2 {
+    font-size: 2.25rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+a {
+    color: $primary;
+    text-decoration: none;
+    transition: $transition-fast;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+/*-------------------------------------------*/
+/* 4. Animations
+/*-------------------------------------------*/
+
+.smooth-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-xl;
+    }
+}

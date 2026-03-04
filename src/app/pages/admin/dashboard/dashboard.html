@@ -1,0 +1,26 @@
+<div class="grid">
+    <div class="stat glass-soft">
+        <div class="stat__label">Products</div>
+        <div class="stat__value">{{ totalProducts() }}</div>
+    </div>
+
+    <div class="stat glass-soft">
+        <div class="stat__label">Total Stock</div>
+        <div class="stat__value">{{ totalStock() }}</div>
+    </div>
+
+    <div class="stat glass-soft">
+        <div class="stat__label">Featured</div>
+        <div class="stat__value">{{ featuredCount() }}</div>
+    </div>
+
+    <div class="stat glass-soft">
+        <div class="stat__label">Cart Items (demo)</div>
+        <div class="stat__value">{{ cartCount() }}</div>
+    </div>
+</div>
+
+<div class="hint glass-soft">
+    Tip: Products CRUD is reactive — edits update the UI immediately (signals +
+    computed).
+</div>

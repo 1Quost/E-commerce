@@ -1,0 +1,134 @@
+<section class="glass-soft panel">
+    <div class="top">
+        <div>
+            <div class="panel__title">Products</div>
+            <div class="panel__sub">Create / edit / delete — UI updates
+                instantly.</div>
+        </div>
+
+        <button class="btn-primary" type="button" (click)="openCreate()">
+            + New Product
+        </button>
+    </div>
+
+    <div class="grid">
+        <div class="p-card" *ngFor="let p of items()">
+            <img class="p-card__img" [src]="p.images[0]" [alt]="p.name" />
+
+            <div class="p-card__body">
+                <div class="p-card__meta">
+                    <div class="p-card__name">{{ p.name }}</div>
+                    <div class="p-card__price">${{ p.price | number : '1.2-2'
+                        }}</div>
+                </div>
+                <div class="p-card__sub">
+                    {{ p.brand }} • {{ p.category }} • Stock: {{ p.stock }}
+                </div>
+
+                <div class="p-card__actions">
+                    <button class="btn-ghost" type="button"
+                        (click)="openEdit(p)">Edit</button>
+                    <button class="btn-danger" type="button"
+                        (click)="remove(p.id)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal" *ngIf="modalOpen()">
+    <div class="modal__backdrop" (click)="close()"></div>
+
+    <div class="modal__panel glass" (click)="$event.stopPropagation()">
+        <div class="modal__top">
+            <div class="modal__title">
+                {{ mode() === 'create' ? 'Create product' : 'Edit product' }}
+            </div>
+            <button class="modal__close" type="button"
+                (click)="close()">✕</button>
+        </div>
+
+        <form class="form" (submit)="$event.preventDefault(); save()">
+            <div class="form__grid">
+                <div>
+                    <label class="label">Name</label>
+                    <input class="input" type="text" formControlName="name" />
+                    <div class="e" *ngIf="err('name')">{{ err('name') }}</div>
+                </div>
+
+                <div>
+                    <label class="label">Brand</label>
+                    <input class="input" type="text" formControlName="brand" />
+                    <div class="e" *ngIf="err('brand')">{{ err('brand') }}</div>
+                </div>
+
+                <div>
+                    <label class="label">Category</label>
+                    <select class="input" formControlName="category">
+                        <option *ngFor="let c of categories" [value]="c">{{ c
+                            }}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="label">Badge</label>
+                    <select class="input" formControlName="badge">
+                        <option *ngFor="let b of badges" [value]="b">{{ b
+                            }}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="label">Price</label>
+                    <input class="input" type="number" step="0.01"
+                        formControlName="price" />
+                    <div class="e" *ngIf="err('price')">{{ err('price') }}</div>
+                </div>
+
+                <div>
+                    <label class="label">Old Price</label>
+                    <input class="input" type="number" step="0.01"
+                        formControlName="oldPrice" />
+                </div>
+
+                <div>
+                    <label class="label">Stock</label>
+                    <input class="input" type="number"
+                        formControlName="stock" />
+                    <div class="e" *ngIf="err('stock')">{{ err('stock') }}</div>
+                </div>
+
+                <div>
+                    <label class="label">Main Image URL</label>
+                    <input class="input" type="text" formControlName="image" />
+                    <div class="e" *ngIf="err('image')">{{ err('image') }}</div>
+                </div>
+
+                <div class="span-2">
+                    <label class="label">Short description</label>
+                    <input class="input" type="text"
+                        formControlName="shortDescription" />
+                    <div class="e" *ngIf="err('shortDescription')">{{
+                        err('shortDescription') }}</div>
+                </div>
+
+                <div class="span-2">
+                    <label class="label">Description</label>
+                    <textarea class="input area" rows="4"
+                        formControlName="description"></textarea>
+                    <div class="e" *ngIf="err('description')">{{
+                        err('description') }}</div>
+                </div>
+            </div>
+
+            <div class="modal__actions">
+                <button class="btn-ghost" type="button"
+                    (click)="close()">Cancel</button>
+                <button class="btn-primary" type="submit">
+                    {{ mode() === 'create' ? 'Create' : 'Save changes' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+<button
+    class="ub"
+    [ngClass]="[
+    'ub--' + variant,
+    'ub--' + size,
+    block ? 'ub--block' : ''
+    ]"
+    [attr.type]="type"
+    [disabled]="disabled || loading">
+    <span class="ub__spinner" *ngIf="loading"></span>
+    <ng-content></ng-content>
+</button>

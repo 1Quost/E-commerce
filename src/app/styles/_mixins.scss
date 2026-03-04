@@ -1,0 +1,35 @@
+@import 'variables';
+
+@mixin glass-effect($color, $blur: 12px) {
+    background: rgba($color, 0.4);
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@mixin glass-dark-effect($color, $blur: 12px) {
+    background: rgba($color, 0.6);
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@mixin primary-gradient {
+    background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+}
+
+@mixin button-styles($bg-color, $text-color, $hover-opacity: 0.9) {
+    background-color: $bg-color;
+    color: $text-color;
+    border-radius: $border-radius;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    transition: $transition-base;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        opacity: $hover-opacity;
+        box-shadow: $shadow-lg;
+    }
+}

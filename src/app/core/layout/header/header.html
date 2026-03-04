@@ -1,0 +1,103 @@
+<header class="nx-header" [class.is-scrolled]="scrolled()">
+    <div class="container-page nx-header__row">
+        <!-- Left -->
+        <div class="left">
+            <button class="hamb" type="button" (click)="toggleMenu()"
+                aria-label="Menu">
+                ☰
+            </button>
+
+            <a class="nx-brand" routerLink="/" (click)="closeMenu()">
+                <span class="nx-brand__mark"></span>
+                <span>
+                    <div class="nx-brand__name">Nexora</div>
+                    <div class="nx-brand__tag">Premium Store</div>
+                </span>
+            </a>
+        </div>
+
+        <!-- Search -->
+        <form class="search" (ngSubmit)="submitSearch()">
+            <input
+                class="search__input"
+                name="q"
+                [(ngModel)]="search()"
+                (ngModelChange)="search.set($event)"
+                placeholder="Search products..."
+                autocomplete="off" />
+            <button class="search__btn" type="submit"
+                aria-label="Search">⌕</button>
+        </form>
+
+        <!-- Right (desktop) -->
+        <nav class="nx-nav">
+            <a class="nx-nav__link" routerLink="/" routerLinkActive="is-active"
+                [routerLinkActiveOptions]="{ exact: true }">
+                Home
+            </a>
+            <a class="nx-nav__link" routerLink="/products"
+                routerLinkActive="is-active">
+                Products
+            </a>
+
+            <a class="nx-nav__link" routerLink="/cart"
+                routerLinkActive="is-active" aria-label="Cart">
+                <span class="cartIcon">
+                    🛒
+                    <span class="cartBadge" *ngIf="cartCount() > 0">{{
+                        cartCount() }}</span>
+                </span>
+            </a>
+
+            <button class="nx-nav__link" type="button" (click)="theme.toggle()">
+                {{ theme.mode() === 'dark' ? 'Light' : 'Dark' }}
+            </button>
+
+            <ng-container *ngIf="!auth.isAuthenticated(); else logged">
+                <a class="nx-nav__link" routerLink="/login"
+                    routerLinkActive="is-active">Login</a>
+                <a class="nx-nav__link" routerLink="/register"
+                    routerLinkActive="is-active">Create account</a>
+            </ng-container>
+
+            <ng-template #logged>
+                <a class="nx-nav__link" routerLink="/profile"
+                    routerLinkActive="is-active">Profile</a>
+                <a class="nx-nav__link" *ngIf="auth.isAdmin()"
+                    routerLink="/admin" routerLinkActive="is-active">Admin</a>
+                <button class="nx-nav__link" type="button"
+                    (click)="logout()">Logout</button>
+            </ng-template>
+        </nav>
+    </div>
+
+    <!-- Mobile menu drawer -->
+    <div class="mobileOverlay" *ngIf="menuOpen()" appClickOutside
+        (clickOutside)="closeMenu()">
+        <div class="mobileMenu" (click)="$event.stopPropagation()">
+            <a routerLink="/" (click)="closeMenu()">Home</a>
+            <a routerLink="/products" (click)="closeMenu()">Products</a>
+            <a routerLink="/cart" (click)="closeMenu()">
+                Cart <span class="pill" *ngIf="cartCount() > 0">{{ cartCount()
+                    }}</span>
+            </a>
+
+            <button type="button" (click)="theme.toggle()">
+                Toggle {{ theme.mode() === 'dark' ? 'Light' : 'Dark' }}
+            </button>
+
+            <ng-container *ngIf="!auth.isAuthenticated(); else loggedMobile">
+                <a routerLink="/login" (click)="closeMenu()">Login</a>
+                <a routerLink="/register" (click)="closeMenu()">Create
+                    account</a>
+            </ng-container>
+
+            <ng-template #loggedMobile>
+                <a routerLink="/profile" (click)="closeMenu()">Profile</a>
+                <a *ngIf="auth.isAdmin()" routerLink="/admin"
+                    (click)="closeMenu()">Admin</a>
+                <button type="button" (click)="logout()">Logout</button>
+            </ng-template>
+        </div>
+    </div>
+</header>
