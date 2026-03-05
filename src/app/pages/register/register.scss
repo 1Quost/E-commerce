@@ -63,3 +63,11 @@
 .dark .muted {
     color: rgba(255, 255, 255, 0.65);
 }
+
+.input {
+    padding: 12px 16px;
+    width:250px;
+    border-radius: 12px;
+    border: 1px solid rgba(11, 18, 32, 0.20);
+    background: rgba(177, 220, 234, 0.2);
+}

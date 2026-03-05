@@ -1,10 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth';
-import { ToastService } from '../../shared/services/toast';
 
 @Component({
   selector: 'app-login',
@@ -13,44 +11,39 @@ import { ToastService } from '../../shared/services/toast';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
-  private readonly fb = inject(FormBuilder);
-  private readonly auth = inject(AuthService);
-  private readonly toast = inject(ToastService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
+export class LoginComponent {
+  private fb = inject(FormBuilder);
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
+  loading = signal(false);
   error = '';
-  readonly loading = signal(false);
 
-  readonly form = this.fb.nonNullable.group({
+  form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required]],
   });
 
-  async submit() {
+  submit() {
     this.error = '';
-    this.form.markAllAsTouched();
-    if (this.form.invalid || this.loading()) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const { email, password } = this.form.getRawValue();
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-
     this.loading.set(true);
-    try {
-      await this.auth.login(email.trim(), password);
 
-      // ✅ Redirect behavior required
-      if (this.auth.isAdmin()) this.router.navigate(['/admin']);
-      else if (returnUrl) this.router.navigateByUrl(returnUrl);
-      else this.router.navigate(['/']);
-
-      this.toast.success('Welcome back');
-    } catch (e: any) {
-      this.error = e?.message ?? 'Login failed';
-      this.toast.error('Login failed', this.error);
-    } finally {
-      this.loading.set(false);
-    }
+    this.auth.login(email!, password!).subscribe({
+      next: () => {
+        this.loading.set(false);
+        if (this.auth.isAdmin()) this.router.navigate(['/admin']);
+        else this.router.navigate(['/']);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.error = 'Invalid email or password';
+      },
+    });
   }
 }

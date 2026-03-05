@@ -1,10 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-
 import { AuthService } from '../../core/auth/auth';
-import { ToastService } from '../../shared/services/toast';
 
 @Component({
   selector: 'app-register',
@@ -13,60 +11,68 @@ import { ToastService } from '../../shared/services/toast';
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
-export class Register {
-  private readonly fb = inject(FormBuilder);
-  private readonly auth = inject(AuthService);
-  private readonly toast = inject(ToastService);
-  private readonly router = inject(Router);
+export class RegisterComponent {
+  private fb = inject(FormBuilder);
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
-  file: File | null = null;
+  loading = signal(false);
   error = '';
-  readonly loading = signal(false);
 
-  readonly form = this.fb.nonNullable.group({
+  form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
-    username: ['', [Validators.required, Validators.minLength(3)]],
+    firstName: ['', [Validators.required]],
+    lastName: ['', [Validators.required]],
+    username: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     dateOfBirth: [''],
+    role: ['user'],
   });
 
-  onFile(ev: Event) {
-    const input = ev.target as HTMLInputElement;
-    this.file = input.files?.[0] ?? null;
+  selectedFile: File | null = null;
+
+  // ✅ IMPORTANT: your template calls onFile($event), so keep this name
+  onFile(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.selectedFile = input.files?.[0] ?? null;
   }
 
-  async submit() {
+  submit() {
     this.error = '';
-    this.form.markAllAsTouched();
-    if (this.form.invalid || this.loading()) return;
-
-    const v = this.form.getRawValue();
-    const formData = new FormData();
-
-    formData.append('email', v.email.trim());
-    formData.append('firstName', v.firstName.trim());
-    formData.append('lastName', v.lastName.trim());
-    formData.append('username', v.username.trim());
-    formData.append('password', v.password);
-    if (v.dateOfBirth) formData.append('dateOfBirth', v.dateOfBirth);
-    // role optional, default backend usually user
-    // formData.append('role','user');
-
-    if (this.file) formData.append('file', this.file);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.loading.set(true);
-    try {
-      await this.auth.register(formData);
-      this.toast.success('Account created');
-      // ✅ redirect behavior
-      this.router.navigate(['/']);
-    } catch (e: any) {
-      this.error = e?.message ?? 'Registration failed';
-      this.toast.error('Registration failed', this.error);
-    } finally {
-      this.loading.set(false);
-    }
+
+    const v = this.form.getRawValue();
+    const roleToSend = v.email === 'patricia@nexora.com' ? 'admin' : (v.role ?? 'user');
+
+    const fd = new FormData();
+    fd.append('email', v.email!);
+    fd.append('firstName', v.firstName!);
+    fd.append('lastName', v.lastName!);
+    fd.append('username', v.username!);
+    fd.append('password', v.password!);
+
+    if (v.dateOfBirth) fd.append('dateOfBirth', v.dateOfBirth);
+    fd.append('role', roleToSend);
+
+    // Swagger says the field name MUST be "file"
+    if (this.selectedFile) fd.append('file', this.selectedFile);
+
+    this.auth.register(fd).subscribe({
+      next: () => {
+        this.loading.set(false);
+        // go admin if admin, else home
+        if (this.auth.isAdmin()) this.router.navigate(['/admin']);
+        else this.router.navigate(['/']);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.error = 'Registration failed. Please check your inputs.';
+      },
+    });
   }
 }

@@ -1,0 +1,8 @@
+{
+    "/api": {
+        "target": "https://melaine-palaeobiologic-savourily.ngrok-free.dev",
+        "secure": true,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

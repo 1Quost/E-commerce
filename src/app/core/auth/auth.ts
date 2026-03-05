@@ -1,124 +1,153 @@
-import { Injectable, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { CookieService } from 'ngx-cookie-service';
+import { catchError, map, of, switchMap, tap, throwError } from 'rxjs';
 import { AuthApi } from './auth-api';
-import { User } from '../../shared/interfaces/user';
+import { ApiUser, LoginResponseV1, LoginResponseV2, NormalizedAuth } from './auth.models';
+import { firstValueFrom } from 'rxjs';
 
-const TOKEN_KEY = 'nx_token';
-const USER_KEY = 'nx_user';
+const ACCESS_COOKIE = 'nx_access_token';
+const REFRESH_COOKIE = 'nx_refresh_token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly api = inject(AuthApi);
-  private readonly router = inject(Router);
+  private _user = signal<ApiUser | null>(null);
+  private _accessToken = signal<string | null>(null);
 
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  user = this._user.asReadonly();
+  accessToken = this._accessToken.asReadonly();
 
-  // SSR-safe initial state
-  readonly token = signal<string | null>(this.isBrowser ? this.loadToken() : null);
-  readonly user = signal<User | null>(this.isBrowser ? this.loadUser() : null);
+  isLoggedInComputed = computed(() => !!this._accessToken());
+  // ✅ Admin by role (if backend returns it)
+  isAdminComputed = computed(() => (this._user()?.role ?? 'user') === 'admin');
 
-  // keep both styles supported:
-  // - templates call auth.isAuthenticated()
-  // - other code can use auth.isAuthenticatedComputed()
-  readonly isAuthenticatedComputed = computed(() => !!this.token());
-  readonly isAdminComputed = computed(() => (this.user()?.role ?? 'user') === 'admin');
+  constructor(
+    private api: AuthApi,
+    private router: Router,
+    private cookies: CookieService
+  ) {
+    // Restore from cookies on app start
+    const token = this.cookies.get(ACCESS_COOKIE);
+    if (token) this._accessToken.set(token);
 
-  constructor() {
-    if (!this.isBrowser) return;
-
-    // persist
-    effect(() => {
-      const t = this.token();
-      if (t) localStorage.setItem(TOKEN_KEY, t);
-      else localStorage.removeItem(TOKEN_KEY);
-    });
-
-    effect(() => {
-      const u = this.user();
-      if (u) localStorage.setItem(USER_KEY, JSON.stringify(u));
-      else localStorage.removeItem(USER_KEY);
-    });
+    // If we have a token, try loading current user (ngrok supports /user)
+    if (this._accessToken()) {
+      this.api.getCurrentUser().pipe(
+        tap((u) => this._user.set(u)),
+        catchError(() => of(null))
+      ).subscribe();
+    }
   }
 
-  // ✅ keep your existing calling style
-  isAuthenticated(): boolean {
-    return this.isAuthenticatedComputed();
+  /** Normalize both backend responses into one internal shape */
+  private normalizeAuthResponse(res: LoginResponseV2 | LoginResponseV1): NormalizedAuth {
+    // NEW backend
+    if ((res as LoginResponseV2).token) {
+      const r = res as LoginResponseV2;
+      return { accessToken: r.token, user: r.user };
+    }
+
+    // OLD backend
+    const r = res as LoginResponseV1;
+    return {
+      accessToken: r.Login.AccessToken,
+      refreshToken: r.Login.RefreshToken,
+    };
+  }
+
+  private setSession(auth: NormalizedAuth) {
+    this._accessToken.set(auth.accessToken);
+    this.cookies.set(ACCESS_COOKIE, auth.accessToken, { path: '/' });
+
+    if (auth.refreshToken) {
+      this.cookies.set(REFRESH_COOKIE, auth.refreshToken, { path: '/' });
+    }
+
+    if (auth.user) {
+      this._user.set(auth.user);
+    }
+  }
+
+  async updateProfile(fd: FormData) {
+    // PATCH /user (Swagger: Update the current user)
+    const updatedUser = await firstValueFrom(this.api.updateUser(fd));
+
+    // keep user state updated (adjust if your state variable name differs)
+    this._user.set(updatedUser);
+
+    // optional: keep localStorage in sync if you use it
+    try {
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch { }
+
+    return updatedUser;
+  }
+
+  login(email: string, password: string) {
+    return this.api.login({ email, password }).pipe(
+      map((res) => this.normalizeAuthResponse(res)),
+      switchMap((auth) => {
+        // If backend didn’t return user (old backend), try fetching /user (if exists)
+        this.setSession(auth);
+
+        if (auth.user) return of(auth);
+
+        return this.api.getCurrentUser().pipe(
+          tap((u) => this._user.set(u)),
+          map((u) => ({ ...auth, user: u })),
+          catchError(() => of(auth)) // old backend might not have /user
+        );
+      })
+    );
+  }
+
+  register(form: FormData) {
+    return this.api.register(form).pipe(
+      map((res) => this.normalizeAuthResponse(res)),
+      switchMap((auth) => {
+        this.setSession(auth);
+
+        if (auth.user) return of(auth);
+
+        return this.api.getCurrentUser().pipe(
+          tap((u) => this._user.set(u)),
+          map((u) => ({ ...auth, user: u })),
+          catchError(() => of(auth))
+        );
+      })
+    );
+  }
+
+  logout(redirectToLogin: boolean = true) {
+    // clear user/token however you store them
+    this._user.set(null);
+    this._accessToken.set(null);
+
+    // if you store in localStorage:
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    // if you store in cookies (keep if you use cookies):
+    try {
+      this.cookies?.delete('nx_access_token', '/');
+      this.cookies?.delete('nx_refresh_token', '/');
+    } catch { }
+
+    if (redirectToLogin) this.router.navigate(['/login']);
+  }
+
+  isLoggedIn(): boolean {
+    return this.isLoggedInComputed();
   }
 
   isAdmin(): boolean {
     return this.isAdminComputed();
   }
+  isAuthenticated(): boolean {
+    return this.isLoggedIn();
+  }
 
-  // ✅ interceptor uses this
   getToken(): string | null {
-    return this.token();
-  }
-
-  async login(email: string, password: string): Promise<User> {
-    const res = await this.api.login({ email, password });
-    this.setSession(res.token, res.user);
-    return res.user;
-  }
-
-  async register(formData: FormData): Promise<User> {
-    const res = await this.api.register(formData);
-    this.setSession(res.token, res.user);
-    return res.user;
-  }
-
-  async checkToken(): Promise<boolean> {
-    if (!this.token()) return false;
-    try {
-      const res = await this.api.check();
-      return !!res.valid;
-    } catch {
-      this.logout(false);
-      return false;
-    }
-  }
-
-  async refreshMe(): Promise<User> {
-    const me = await this.api.getMe();
-    this.user.set(me);
-    return me;
-  }
-
-  async updateProfile(formData: FormData): Promise<User> {
-    const updated = await this.api.updateMe(formData);
-    this.user.set(updated);
-    return updated;
-  }
-
-  async deleteAccount(): Promise<void> {
-    await this.api.deleteMe();
-    this.logout();
-  }
-
-  logout(navigate = true) {
-    this.token.set(null);
-    this.user.set(null);
-    if (navigate) this.router.navigate(['/login']);
-  }
-
-  private setSession(token: string, user: User) {
-    this.token.set(token);
-    this.user.set(user);
-  }
-
-  private loadToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
-  }
-
-  private loadUser(): User | null {
-    const raw = localStorage.getItem(USER_KEY);
-    if (!raw) return null;
-    try {
-      return JSON.parse(raw) as User;
-    } catch {
-      return null;
-    }
+    return this._accessToken();
   }
 }

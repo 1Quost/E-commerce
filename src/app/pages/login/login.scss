@@ -58,3 +58,27 @@
     border-radius: 22px;
     font-weight: 850;
 }
+
+.input {
+    padding: 12px 16px;
+    width:400px;
+    height: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(11, 18, 32, 0.20);
+}
+
+.btn-primary{
+    width: 100px;
+    margin-left: 320px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 900;
+}
+
+.form{
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+}

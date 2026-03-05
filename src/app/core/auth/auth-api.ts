@@ -1,68 +1,35 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-
+import { Observable } from 'rxjs';
 import { environment } from '../../../enviroments/enviroment';
-import { User } from '../../shared/interfaces/user';
-
-export type AuthResponse = { token: string; user: User };
-export type CheckResponse = { valid: boolean };
-export type LoginPayload = { email: string; password: string };
+import { ApiUser, LoginResponseV1, LoginResponseV2 } from './auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApi {
-  private readonly http = inject(HttpClient);
+  private http = inject(HttpClient);
+  private base = environment.apiBaseUrl; // should already include /api for ngrok backend
 
-  // your env already includes /api at the end
-  private readonly base = environment.apiBaseUrl ?? '/api';
-
-  async register(formData: FormData): Promise<AuthResponse> {
-    return await firstValueFrom(
-      this.http.post<AuthResponse>(`${this.base}/auth/register`, formData)
-    ).catch(this.handle);
+  login(payload: { email: string; password: string }): Observable<LoginResponseV2 | LoginResponseV1> {
+    // ngrok backend expects JSON body
+    return this.http.post<LoginResponseV2 | LoginResponseV1>(`${this.base}/auth/login`, payload);
   }
 
-  async login(payload: LoginPayload): Promise<AuthResponse> {
-    return await firstValueFrom(
-      this.http.post<AuthResponse>(`${this.base}/auth/login`, payload, {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      })
-    ).catch(this.handle);
+  register(form: FormData): Observable<LoginResponseV2 | LoginResponseV1> {
+    // both swagger versions often accept multipart on register (and your swagger says multipart)
+    return this.http.post<LoginResponseV2 | LoginResponseV1>(`${this.base}/auth/register`, form);
   }
 
-  async check(): Promise<CheckResponse> {
-    return await firstValueFrom(
-      this.http.post<CheckResponse>(`${this.base}/auth/check`, {})
-    ).catch(this.handle);
+  updateUser(fd: FormData) {
+    return this.http.patch<any>(`${this.base}/user`, fd);
   }
 
-  async getMe(): Promise<User> {
-    return await firstValueFrom(this.http.get<User>(`${this.base}/user`)).catch(this.handle);
+  /** ngrok backend provides this endpoint */
+  getCurrentUser(): Observable<ApiUser> {
+    return this.http.get<ApiUser>(`${this.base}/user`);
   }
 
-  async updateMe(formData: FormData): Promise<User> {
-    return await firstValueFrom(this.http.patch<User>(`${this.base}/user`, formData)).catch(
-      this.handle
-    );
-  }
-
-  async deleteMe(): Promise<void> {
-    await firstValueFrom(this.http.delete<void>(`${this.base}/user`)).catch(this.handle);
-  }
-
-  private handle(err: unknown): never {
-    const e = err as HttpErrorResponse;
-
-    const body: any = (e as any)?.error ?? {};
-    const message =
-      body?.message ||
-      (typeof body === 'string' ? body : '') ||
-      (e as any)?.message ||
-      'Request failed';
-
-    const errors: string[] = Array.isArray(body?.errors) ? body.errors : [];
-    const details = errors.length ? ` (${errors.join(', ')})` : '';
-
-    throw new Error(`${message}${details}`);
+  /** old local backend sometimes has /auth/check */
+  checkToken(): Observable<{ valid: boolean }> {
+    return this.http.post<{ valid: boolean }>(`${this.base}/auth/check`, {});
   }
 }

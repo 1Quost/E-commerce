@@ -21,8 +21,8 @@ export const routes: Routes = [
             { path: 'not-found', loadComponent: () => import('./pages/not-found/not-found').then((m) => m.NotFound) },
 
             // Guest-only
-            { path: 'login', canActivate: [guestGuard], loadComponent: () => import('./pages/login/login').then((m) => m.Login) },
-            { path: 'register', canActivate: [guestGuard], loadComponent: () => import('./pages/register/register').then((m) => m.Register) },
+            { path: 'login', canActivate: [guestGuard], loadComponent: () => import('./pages/login/login').then((m) => m.LoginComponent) },
+            { path: 'register', canActivate: [guestGuard], loadComponent: () => import('./pages/register/register').then((m) => m.RegisterComponent) },
 
             // Auth-only
             { path: 'profile', canActivate: [authGuard], loadComponent: () => import('./pages/profile/profile').then((m) => m.Profile) },
