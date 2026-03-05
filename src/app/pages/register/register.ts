@@ -38,6 +38,7 @@ export class RegisterComponent {
   }
 
   submit() {
+    console.log('REGISTER SUBMIT FIRED', this.form.value, this.form.valid);
     this.error = '';
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -69,10 +70,18 @@ export class RegisterComponent {
         if (this.auth.isAdmin()) this.router.navigate(['/admin']);
         else this.router.navigate(['/']);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error = 'Registration failed. Please check your inputs.';
+        console.error('REGISTER ERROR', err);
+
+        const apiMsg =
+          err?.error?.message ||
+          (Array.isArray(err?.error?.errors) ? err.error.errors.join(', ') : '') ||
+          err?.message;
+
+        this.error = apiMsg || 'Registration failed. Please check your inputs.';
       },
     });
+
   }
 }

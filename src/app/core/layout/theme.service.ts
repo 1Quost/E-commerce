@@ -19,6 +19,7 @@ export class ThemeService {
             localStorage.setItem(THEME_KEY, m);
         });
     }
+    
 
     toggle(): void {
         this.mode.set(this.mode() === 'dark' ? 'light' : 'dark');

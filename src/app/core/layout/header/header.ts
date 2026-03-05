@@ -63,6 +63,9 @@ export class Header {
     this.closeMenu();
     this.auth.logout(true);
   }
+  toggleTheme() {
+    this.theme.toggle();
+  }
 
   submitSearch() {
     const q = this.search().trim();

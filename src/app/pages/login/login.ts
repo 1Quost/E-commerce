@@ -21,10 +21,11 @@ export class LoginComponent {
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   submit() {
+    console.log('LOGIN SUBMIT FIRED', this.form.value, this.form.valid);
     this.error = '';
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -40,10 +41,13 @@ export class LoginComponent {
         if (this.auth.isAdmin()) this.router.navigate(['/admin']);
         else this.router.navigate(['/']);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error = 'Invalid email or password';
+        console.error('LOGIN ERROR', err);
+        const apiMsg = err?.error?.message || err?.message;
+        this.error = apiMsg || 'Invalid email or password';
       },
     });
+
   }
 }
