@@ -1,4 +1,10 @@
-/* Most shell styles are already in styles.scss */
+.nx-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .nx-main {
+    flex: 1;
     padding: 28px 0 60px;
 }

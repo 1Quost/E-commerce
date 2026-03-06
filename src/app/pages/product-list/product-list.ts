@@ -10,7 +10,7 @@ import { ProductCard } from '../../shared/components/product-card/product-card';
   standalone: true,
   imports: [CommonModule, ProductCard],
   templateUrl: './product-list.html',
-  styleUrl: './product-list.scss',
+  styleUrls: ['./product-list.scss'], // ✅ FIXED (was styleUrl)
 })
 export class ProductList {
   private readonly route = inject(ActivatedRoute);
@@ -19,39 +19,61 @@ export class ProductList {
   readonly q = signal('');
   readonly category = signal<string>('All');
 
+  // normalize helper
+  private normalize(v: unknown): string {
+    return String(v ?? '').trim().toLowerCase();
+  }
+
   readonly products = computed(() => this.productsService.items());
 
   readonly categories = computed(() => {
     const set = new Set<string>();
-    for (const p of this.products()) set.add(p.category);
-    return ['All', ...Array.from(set).sort()];
+
+    for (const p of this.products()) {
+      const cat = String((p as any).category ?? '').trim();
+      if (cat) set.add(cat);
+    }
+
+    return ['All', ...Array.from(set).sort((a, b) => a.localeCompare(b))];
   });
 
   readonly filtered = computed(() => {
-    const q = this.q().trim().toLowerCase();
-    const c = this.category();
+    const q = this.normalize(this.q());
+    const selected = this.normalize(this.category());
 
-    return this.products().filter((p) => {
+    return this.products().filter((p: any) => {
+      const name = this.normalize(p.name);
+      const brand = this.normalize(p.brand);
+      const cat = this.normalize(p.category);
+
       const matchesQ =
         !q ||
-        p.name.toLowerCase().includes(q) ||
-        p.brand.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q);
+        name.includes(q) ||
+        brand.includes(q) ||
+        cat.includes(q);
 
-      const matchesC = c === 'All' || p.category === c;
+      const matchesC =
+        selected === 'all' ||
+        cat === selected;
 
       return matchesQ && matchesC;
     });
   });
 
+  // safer click handler
+  onCategoryClick(c: string) {
+    console.log('CATEGORY CLICKED:', c);
+    this.category.set(c);
+  }
+
   constructor() {
-    // ✅ sync query param ?q=...
+    // initial query param
     effect(() => {
       const qp = this.route.snapshot.queryParamMap.get('q') ?? '';
       this.q.set(qp);
     });
 
-    // ✅ also update when navigation changes (real-time)
+    // live updates
     this.route.queryParamMap.subscribe((m) => {
       this.q.set(m.get('q') ?? '');
     });

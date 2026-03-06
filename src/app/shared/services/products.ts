@@ -91,7 +91,9 @@ export class ProductsService {
   private loadFromStorage(): Product[] {
     const parsed = StorageUtil.get<unknown>(this.LS_KEY);
     if (!parsed || !Array.isArray(parsed)) return [];
-    return (parsed as unknown[]).filter(this.isProductLike).map((p) => p as Product);
+    return (parsed as unknown[])
+      .filter((p) => this.isProductLike(p))
+      .map((p) => p as Product);
   }
 
   private persist(list: Product[]) {
@@ -102,7 +104,7 @@ export class ProductsService {
     return 'p_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
   }
 
-  private isProductLike = (p: unknown): p is Product => {
+  private isProductLike(p: unknown): p is Product {
     if (!p || typeof p !== 'object') return false;
     const o = p as Record<string, unknown>;
 
@@ -117,5 +119,5 @@ export class ProductsService {
       typeof o['shortDescription'] === 'string' &&
       typeof o['description'] === 'string'
     );
-  };
+  }
 }

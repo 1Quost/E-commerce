@@ -82,3 +82,19 @@
     gap: 12px;
     padding: 12px;
 }
+
+
+
+@media (max-width: 500px) {
+    
+    .input {
+        width: 250px;
+    }
+
+    .btn-primary {
+        margin-left: 200px;
+    }
+
+
+    
+}

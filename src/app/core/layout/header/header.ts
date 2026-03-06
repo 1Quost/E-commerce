@@ -1,7 +1,7 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 
 import { AuthService } from '../../auth/auth';
@@ -13,7 +13,7 @@ import { PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive, ClickOutsideDirective],
+  imports: [CommonModule, FormsModule, RouterLink,RouterModule, RouterLinkActive, ClickOutsideDirective],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

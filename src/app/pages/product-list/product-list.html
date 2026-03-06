@@ -16,7 +16,7 @@
                 *ngFor="let c of categories()"
                 type="button"
                 [class.is-active]="category() === c"
-                (click)="category.set(c)">
+                (click)="onCategoryClick(c)">
                 {{ c }}
             </button>
         </div>
