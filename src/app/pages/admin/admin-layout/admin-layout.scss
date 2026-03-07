@@ -27,6 +27,36 @@
     color: rgba(255, 255, 255, 0.65);
 }
 
+.admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.admin-user {
+    padding: 10px 12px;
+    border-radius: 14px;
+    min-width: 220px;
+}
+
+.admin-user__name {
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.admin-user__meta {
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(11, 18, 32, 0.62);
+}
+
+.dark .admin-user__meta {
+    color: rgba(255, 255, 255, 0.65);
+}
+
 .admin-tabs {
     display: inline-flex;
     gap: 8px;
@@ -64,4 +94,19 @@
 
 .admin-body {
     padding-top: 4px;
+}
+
+@media (max-width: 760px) {
+    .admin-top {
+        flex-direction: column;
+    }
+
+    .admin-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .admin-user {
+        width: 100%;
+    }
 }

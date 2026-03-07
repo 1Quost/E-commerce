@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -12,5 +12,7 @@ import { AuthService } from '../../../core/auth/auth';
   styleUrl: './admin-layout.scss',
 })
 export class AdminLayout {
+  readonly user = computed(() => this.auth.user());
+
   constructor(public auth: AuthService) {}
 }

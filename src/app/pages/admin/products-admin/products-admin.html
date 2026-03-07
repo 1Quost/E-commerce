@@ -3,59 +3,107 @@
         <div class="top">
             <div>
                 <div class="title">Admin Products</div>
-                <div class="sub">Create, edit, delete products (instant
-                    updates).</div>
+                <div class="sub">
+                    Create, edit, and manage your catalog with instant updates.
+                </div>
             </div>
 
-            <button class="btn-primary" type="button"
-                (click)="startCreate()">New product</button>
+            <div class="top-actions">
+                <input
+                    class="input search-input"
+                    type="text"
+                    [value]="search()"
+                    (input)="search.set(($any($event.target)).value)"
+                    placeholder="Search products..." />
+
+                <button class="btn-primary" type="button" (click)="startCreate()">
+                    New product
+                </button>
+            </div>
         </div>
 
         <form class="form glass-soft" [formGroup]="form" (ngSubmit)="save()">
+            <div class="form-top">
+                <div class="title-sm">
+                    {{ editingId() ? 'Edit product' : 'Create product' }}
+                </div>
+
+                <button
+                    *ngIf="editingId()"
+                    class="btn-ghost"
+                    type="button"
+                    (click)="cancelEdit()">
+                    Cancel edit
+                </button>
+            </div>
+
             <div class="grid2">
                 <div>
                     <label class="label">Name</label>
                     <input class="input" formControlName="name" />
+                    <div class="err" *ngIf="fieldError('name')">Name must be at least 2 characters.</div>
                 </div>
+
                 <div>
                     <label class="label">Brand</label>
                     <input class="input" formControlName="brand" />
+                    <div class="err" *ngIf="fieldError('brand')">Brand must be at least 2 characters.</div>
                 </div>
             </div>
 
             <div class="grid2">
                 <div>
                     <label class="label">Category</label>
-                    <input class="input" formControlName="category" />
+                    <select class="input" formControlName="category">
+                        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+                    </select>
                 </div>
+
                 <div>
                     <label class="label">Images (comma separated URLs)</label>
                     <input class="input" formControlName="images" />
+                    <div class="err" *ngIf="fieldError('images')">At least one image URL is required.</div>
                 </div>
             </div>
 
             <div class="grid2">
                 <div>
                     <label class="label">Price</label>
-                    <input class="input" type="number"
-                        formControlName="price" />
+                    <input class="input" type="number" formControlName="price" />
                 </div>
+
                 <div>
                     <label class="label">Stock</label>
-                    <input class="input" type="number"
-                        formControlName="stock" />
+                    <input class="input" type="number" formControlName="stock" />
+                </div>
+            </div>
+
+            <div class="grid2">
+                <div>
+                    <label class="label">Rating</label>
+                    <input class="input" type="number" step="0.1" formControlName="rating" />
+                </div>
+
+                <div>
+                    <label class="label">Reviews count</label>
+                    <input class="input" type="number" formControlName="reviewsCount" />
                 </div>
             </div>
 
             <div>
                 <label class="label">Short description</label>
                 <input class="input" formControlName="shortDescription" />
+                <div class="err" *ngIf="fieldError('shortDescription')">
+                    Short description must be at least 10 characters.
+                </div>
             </div>
 
             <div>
                 <label class="label">Description</label>
-                <textarea class="input" rows="4"
-                    formControlName="description"></textarea>
+                <textarea class="input" rows="4" formControlName="description"></textarea>
+                <div class="err" *ngIf="fieldError('description')">
+                    Description must be at least 20 characters.
+                </div>
             </div>
 
             <button class="btn-primary" type="submit">
@@ -63,24 +111,27 @@
             </button>
         </form>
 
+        <div class="list-head">
+            <div class="muted strong">{{ filteredItems().length }} product(s)</div>
+        </div>
+
         <div class="list">
-            <div class="row glass-soft" *ngFor="let p of items()">
+            <div class="row glass-soft" *ngFor="let p of filteredItems()">
                 <div class="rleft">
-                    <img class="img" [src]="p.images?.[0]" [alt]="p.name" />
+                    <img class="img" [src]="p.images[0]" [alt]="p.name" />
+
                     <div>
                         <div class="name">{{ p.name }}</div>
-                        <div class="muted">{{ p.brand }} • {{ p.category
-                            }}</div>
-                        <div class="muted">${{ p.price | number:'1.2-2' }} •
-                            stock {{ p.stock }}</div>
+                        <div class="muted">{{ p.brand }} • {{ p.category }}</div>
+                        <div class="muted">
+                            ${{ p.price | number:'1.2-2' }} • stock {{ p.stock }}
+                        </div>
                     </div>
                 </div>
 
                 <div class="ractions">
-                    <button class="btn-ghost" type="button"
-                        (click)="startEdit(p)">Edit</button>
-                    <button class="btn-danger" type="button"
-                        (click)="remove(p.id)">Delete</button>
+                    <button class="btn-ghost" type="button" (click)="startEdit(p)">Edit</button>
+                    <button class="btn-danger" type="button" (click)="remove(p.id)">Delete</button>
                 </div>
             </div>
         </div>

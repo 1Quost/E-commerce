@@ -2,23 +2,26 @@
     <section class="admin-shell glass">
         <div class="admin-top">
             <div>
-                <div class="admin-title">Admin</div>
-                <div class="admin-sub">Manage products and orders — live
-                    updates, no reload.</div>
+                <div class="admin-title">Admin Panel</div>
+                <div class="admin-sub">
+                    Manage products and orders with live updates.
+                </div>
             </div>
 
             <div class="admin-actions">
+                <div class="admin-user glass-soft" *ngIf="user() as u">
+                    <div class="admin-user__name">{{ u.firstName }} {{ u.lastName }}</div>
+                    <div class="admin-user__meta">{{ u.email }}</div>
+                </div>
+
                 <a class="btn-ghost" routerLink="/">Back to Store</a>
             </div>
         </div>
 
         <nav class="admin-tabs">
-            <a routerLink="/admin/dashboard"
-                routerLinkActive="is-active">Dashboard</a>
-            <a routerLink="/admin/products"
-                routerLinkActive="is-active">Products</a>
-            <a routerLink="/admin/orders"
-                routerLinkActive="is-active">Orders</a>
+            <a routerLink="/admin/dashboard" routerLinkActive="is-active">Dashboard</a>
+            <a routerLink="/admin/products" routerLinkActive="is-active">Products</a>
+            <a routerLink="/admin/orders" routerLinkActive="is-active">Orders</a>
         </nav>
 
         <div class="admin-body">

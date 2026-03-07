@@ -4,38 +4,30 @@
             <div class="title">Checkout</div>
             <div class="sub">Enter delivery details and confirm.</div>
 
-            <form class="form" (submit)="$event.preventDefault(); submit()">
+            <form class="form" [formGroup]="form" (ngSubmit)="submit()">
                 <div>
                     <label class="label">Full name</label>
-                    <input class="input" type="text"
-                        formControlName="fullName" />
-                    <div class="err" *ngIf="e('fullName')">Please enter your
-                        name.</div>
+                    <input class="input" type="text" formControlName="fullName" />
+                    <div class="err" *ngIf="e('fullName')">Please enter your name.</div>
                 </div>
 
                 <div>
                     <label class="label">Address</label>
-                    <input class="input" type="text"
-                        formControlName="address" />
-                    <div class="err" *ngIf="e('address')">Please enter an
-                        address.</div>
+                    <input class="input" type="text" formControlName="address" />
+                    <div class="err" *ngIf="e('address')">Please enter an address.</div>
                 </div>
 
                 <div class="grid2">
                     <div>
                         <label class="label">City</label>
-                        <input class="input" type="text"
-                            formControlName="city" />
-                        <div class="err" *ngIf="e('city')">City is
-                            required.</div>
+                        <input class="input" type="text" formControlName="city" />
+                        <div class="err" *ngIf="e('city')">City is required.</div>
                     </div>
 
                     <div>
                         <label class="label">Phone</label>
-                        <input class="input" type="tel"
-                            formControlName="phone" />
-                        <div class="err" *ngIf="e('phone')">Phone is
-                            required.</div>
+                        <input class="input" type="tel" formControlName="phone" />
+                        <div class="err" *ngIf="e('phone')">Phone is required.</div>
                     </div>
                 </div>
 
@@ -48,30 +40,24 @@
 
             <div class="sum">
                 <div class="row" *ngFor="let it of items()">
-                    <span class="muted">{{ it.qty }} × {{ it.product.name
-                        }}</span>
-                    <strong>${{ (it.qty * it.product.price) | number : '1.2-2'
-                        }}</strong>
+                    <span class="muted">{{ it.qty }} × {{ it.product.name }}</span>
+                    <strong>${{ (it.qty * it.product.price) | number : '1.2-2' }}</strong>
                 </div>
 
                 <div class="sep"></div>
 
                 <div class="row">
-                    <span>Subtotal</span><strong>${{ subtotal() | number :
-                        '1.2-2' }}</strong>
+                    <span>Subtotal</span><strong>${{ subtotal() | number : '1.2-2' }}</strong>
                 </div>
                 <div class="row">
-                    <span>Shipping</span><strong>${{ shipping() | number :
-                        '1.2-2' }}</strong>
+                    <span>Shipping</span><strong>${{ shipping() | number : '1.2-2' }}</strong>
                 </div>
                 <div class="row">
-                    <span>Tax</span><strong>${{ tax() | number : '1.2-2'
-                        }}</strong>
+                    <span>Tax</span><strong>${{ tax() | number : '1.2-2' }}</strong>
                 </div>
 
                 <div class="row total">
-                    <span>Total</span><strong>${{ total() | number : '1.2-2'
-                        }}</strong>
+                    <span>Total</span><strong>${{ total() | number : '1.2-2' }}</strong>
                 </div>
             </div>
         </div>

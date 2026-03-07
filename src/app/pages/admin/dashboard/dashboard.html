@@ -10,17 +10,52 @@
     </div>
 
     <div class="stat glass-soft">
-        <div class="stat__label">Featured</div>
-        <div class="stat__value">{{ featuredCount() }}</div>
+        <div class="stat__label">Low Stock</div>
+        <div class="stat__value">{{ lowStockCount() }}</div>
     </div>
 
     <div class="stat glass-soft">
-        <div class="stat__label">Cart Items (demo)</div>
-        <div class="stat__value">{{ cartCount() }}</div>
+        <div class="stat__label">Inventory Value</div>
+        <div class="stat__value">${{ totalInventoryValue() | number:'1.2-2' }}</div>
     </div>
 </div>
 
-<div class="hint glass-soft">
-    Tip: Products CRUD is reactive — edits update the UI immediately (signals +
-    computed).
+<div class="grid" style="margin-top: 14px;">
+    <section class="glass-soft panel">
+        <div class="panel__title">Recently Added / Current Products</div>
+        <div class="panel__sub">Quick overview of the current catalog.</div>
+
+        <div class="mini-list">
+            <div class="mini-row" *ngFor="let p of recentProducts()">
+                <div>
+                    <div class="strong">{{ p.name }}</div>
+                    <div class="muted">{{ p.brand }} • {{ p.category }}</div>
+                </div>
+                <div class="strong">${{ p.price | number:'1.2-2' }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="glass-soft panel">
+        <div class="panel__title">Low Stock Alert</div>
+        <div class="panel__sub">Products that may need restocking soon.</div>
+
+        <div class="mini-list" *ngIf="lowStockProducts().length; else noLowStock">
+            <div class="mini-row" *ngFor="let p of lowStockProducts()">
+                <div>
+                    <div class="strong">{{ p.name }}</div>
+                    <div class="muted">{{ p.brand }}</div>
+                </div>
+                <div class="pill">{{ p.stock }} left</div>
+            </div>
+        </div>
+
+        <ng-template #noLowStock>
+            <div class="hint glass-soft">No low-stock products right now.</div>
+        </ng-template>
+    </section>
+</div>
+
+<div class="hint glass-soft" style="margin-top: 14px;">
+    Tip: Product edits are reactive, so your dashboard and product lists update instantly.
 </div>

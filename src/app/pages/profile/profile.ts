@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -29,15 +29,17 @@ export class Profile {
       password: [''],
     });
 
-    const u = this.auth.user();
-    if (u) {
+    effect(() => {
+      const u = this.auth.user();
+      if (!u) return;
+
       this.form.patchValue({
         firstName: u.firstName ?? '',
         lastName: u.lastName ?? '',
         username: u.username ?? '',
         dateOfBirth: u.dateOfBirth ?? '',
       });
-    }
+    });
   }
 
   onFile(ev: Event) {

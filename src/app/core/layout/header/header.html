@@ -1,9 +1,6 @@
 <header class="nx-header" [class.is-scrolled]="scrolled()">
     <div class="container-page nx-header__row">
         <div class="left">
-            <button class="hamb" type="button" (click)="toggleMenu()"
-                aria-label="Menu">☰</button>
-
             <a class="nx-brand" routerLink="/" (click)="closeMenu()">
                 <span class="nx-brand__mark"></span>
                 <span>
@@ -11,6 +8,9 @@
                     <div class="nx-brand__tag">Premium Store</div>
                 </span>
             </a>
+
+            <button class="hamb" type="button" (click)="toggleMenu()"
+                aria-label="Menu">☰</button>
         </div>
 
         <!-- ✅ Desktop search -->

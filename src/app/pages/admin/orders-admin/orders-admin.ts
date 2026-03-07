@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Order } from '../../../shared/interfaces/order';
 
@@ -57,9 +57,35 @@ const MOCK_ORDERS: Order[] = [
 export class OrdersAdmin {
   readonly orders = signal<Order[]>(MOCK_ORDERS);
 
+  readonly sortedOrders = computed(() =>
+    [...this.orders()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  );
+
+  readonly paidCount = computed(() =>
+    this.orders().filter((o) => o.status === 'Paid').length
+  );
+
+  readonly pendingCount = computed(() =>
+    this.orders().filter((o) => o.status === 'Pending').length
+  );
+
+  readonly cancelledCount = computed(() =>
+    this.orders().filter((o) => o.status === 'Cancelled').length
+  );
+
+  readonly revenue = computed(() =>
+    this.orders()
+      .filter((o) => o.status === 'Paid')
+      .reduce((sum, o) => sum + o.total, 0)
+  );
+
   setStatus(id: string, status: Order['status']) {
     this.orders.update((arr) =>
       arr.map((o) => (o.id === id ? { ...o, status } : o))
     );
+  }
+
+  itemsCount(order: Order) {
+    return order.items.reduce((sum, it) => sum + it.qty, 0);
   }
 }
