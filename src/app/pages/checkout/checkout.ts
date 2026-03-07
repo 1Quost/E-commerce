@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 
 import { CartService } from '../../shared/services/cart';
 import { ToastService } from '../../shared/services/toast';
+import { OrdersService } from '../../shared/services/order';
+import { AuthService } from '../../core/auth/auth';
+import { Order } from '../../shared/interfaces/order';
 
 @Component({
   selector: 'app-checkout',
@@ -17,6 +20,8 @@ export class Checkout {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly orders = inject(OrdersService);
+  private readonly auth = inject(AuthService);
 
   public cart = inject(CartService);
 
@@ -43,7 +48,35 @@ export class Checkout {
       return;
     }
 
+    const user = this.auth.user();
+    const v = this.form.getRawValue();
+
+    const order: Order = {
+      id: this.newOrderId(),
+      customer: v.fullName.trim(),
+      email: user?.email ?? 'unknown@nexora.local',
+      date: new Date().toISOString(),
+      status: 'Pending',
+      items: this.items().map((it) => ({
+        productId: it.product.id,
+        productName: it.product.name,
+        productImage: it.product.images[0] ?? '',
+        qty: it.qty,
+        unitPrice: it.product.price,
+        lineTotal: it.qty * it.product.price,
+      })),
+      subtotal: this.subtotal(),
+      shipping: this.shipping(),
+      tax: this.tax(),
+      total: this.total(),
+      address: v.address.trim(),
+      city: v.city.trim(),
+      phone: v.phone.trim(),
+    };
+
+    this.orders.addOrder(order);
     this.cart.clear();
+
     this.toast.success('Order placed', 'Thank you for your purchase');
     this.router.navigate(['/order-success']);
   }
@@ -51,5 +84,9 @@ export class Checkout {
   e(name: keyof typeof this.form.controls) {
     const c = this.form.controls[name];
     return c.invalid && (c.touched || c.dirty);
+  }
+
+  private newOrderId(): string {
+    return 'ord_' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36);
   }
 }

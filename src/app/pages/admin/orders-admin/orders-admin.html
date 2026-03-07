@@ -1,6 +1,6 @@
 <section class="glass-soft panel">
     <div class="panel__title">Orders</div>
-    <div class="panel__sub">Current demo orders overview. Ready for real checkout integration later.</div>
+    <div class="panel__sub">Orders created from real checkout are listed here.</div>
 
     <div class="stats">
         <div class="mini-stat">
@@ -21,7 +21,11 @@
         </div>
     </div>
 
-    <div class="table">
+    <div class="hint glass-soft" *ngIf="sortedOrders().length === 0" style="margin-top: 14px;">
+        No orders yet. Place an order from checkout and it will appear here.
+    </div>
+
+    <div class="table" *ngIf="sortedOrders().length > 0">
         <div class="row head">
             <div>ID</div>
             <div>Customer</div>
@@ -37,6 +41,9 @@
                 <div class="strong">{{ o.customer }}</div>
                 <div class="muted">{{ o.email }}</div>
                 <div class="muted">{{ itemsCount(o) }} item(s) • {{ o.date | date:'mediumDate' }}</div>
+                <div class="muted" *ngIf="o.city || o.phone">
+                    {{ o.city || 'Unknown city' }} • {{ o.phone || 'No phone' }}
+                </div>
             </div>
 
             <div>

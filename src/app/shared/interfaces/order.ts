@@ -20,4 +20,8 @@ export interface Order {
     shipping: number;
     tax: number;
     total: number;
+
+    address?: string;
+    city?: string;
+    phone?: string;
 }
